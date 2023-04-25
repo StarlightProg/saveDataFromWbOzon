@@ -126,6 +126,8 @@ class getPostingFbsOzon implements ShouldQueue
         $dataDB = [];
         $offset = 0;
 
+        ini_set('memory_limit', '-1');
+
         do {
             $response = $Client->request('POST','/v3/posting/fbs/list', [
                 'json' =>[

@@ -10,6 +10,7 @@ use App\Jobs\getSalesReports;
 use App\Jobs\getStocks;
 use App\Jobs\getStocksOzon;
 use App\Models\TestTable;
+use App\Models\Wb_incomes;
 use App\Models\Wb_orders;
 use App\Models\Wb_prices;
 use App\Models\Wb_sales;
@@ -31,5 +32,28 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $headersStatistics= ["Content-Type" => "application/json",
+            "Authorization" => env('AUTH_TOKEN_WB_STATISTICS')];
 
+        $headersSuppliers = ["Content-Type" => "application/json",
+        "Authorization" => env('AUTH_TOKEN_WB_SUPPLIERS')];
+
+        $statisticsClientData = array(
+            'base_uri' => "https://statistics-api.wildberries.ru/api/v1/",
+            'timeout' => 120.0,
+            'verify' => false,
+            'headers' => $headersStatistics
+        );
+
+        $suppliersClientData  = array(
+            'base_uri' => "https://suppliers-api.wildberries.ru/public/api/",
+            'timeout' => 2.0,
+            'verify' => false,
+            'headers' => $headersSuppliers
+        );
+        //Wb_prices::query()->truncate();
+ 
+        dd(Wb_prices::all());
+    //getPrices::dispatch($suppliersClientData);
+    echo("nwqdjqwdjnqw");
 });
