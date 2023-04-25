@@ -62,11 +62,8 @@ class getPrices implements ShouldQueue
 
         $data = json_decode($response->getBody()->getContents());
 
-        foreach ($data as $price) {
-            //$incomeDate = Wb_incomes::where('nm_id', $price->nmId)->first();     
-
+        foreach ($data as $price) {  
             $priceDataDB=[
-                //'date' => $incomeDate,
                 'nm_id' => $price->nmId,
                 'price' => $price->price,
                 'discount' => $price->discount,
@@ -76,7 +73,7 @@ class getPrices implements ShouldQueue
             $requestDB[] = $priceDataDB;   
         }  
 
-        foreach(array_chunk($requestDB, 2000) as $request){
+        foreach(array_chunk($requestDB, 200) as $request){
             Wb_prices::insert($request);
         }
     }

@@ -107,7 +107,7 @@ class getStocks implements ShouldQueue
             $requestDB[] = $stocksDataDB;    
         }
 
-        foreach(array_chunk($requestDB, 2000) as $request){
+        foreach(array_chunk($requestDB, 200) as $request){
             Wb_stocks::insert($request);
         }
     }

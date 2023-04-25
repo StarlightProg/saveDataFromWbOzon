@@ -150,7 +150,7 @@ class getSales implements ShouldQueue
             $requestDB[] = $saleDataDB;
         }
 
-        foreach(array_chunk($requestDB, 2000) as $request){
+        foreach(array_chunk($requestDB, 200) as $request){
             Wb_sales::upsert($request,['sale_id']);
         }
        

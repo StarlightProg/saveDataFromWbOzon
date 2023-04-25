@@ -95,7 +95,7 @@ class getIncomes implements ShouldQueue
             $requestDB[] = $incomesDataDB;
         }
 
-        foreach(array_chunk($requestDB, 2000) as $request){
+        foreach(array_chunk($requestDB, 200) as $request){
             Wb_incomes::insert($request);
         }
 

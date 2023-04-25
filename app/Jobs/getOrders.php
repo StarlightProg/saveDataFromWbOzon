@@ -104,12 +104,8 @@ class getOrders implements ShouldQueue
             $requestDB[] = $ordersDataDB;
         }
 
-        foreach(array_chunk($requestDB, 2000) as $request){
+        foreach(array_chunk($requestDB, 200) as $request){
             Wb_orders::upsert($request,['odid']);
         }
-        //ini_set('memory_limit', '128M');
-
-        //dd(json_decode($response->getBody()->getContents()));
-        //dd($dataIncomes);
     }
 }
