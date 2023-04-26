@@ -12,8 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:update-data-daily')->everyTwoMinutes();
-        //$schedule->command('app:update-data-daily')->dailyAt('22:00');
+        $schedule->command('app:update-data-daily')->dailyAt('22:00');
+    }
+
+    public function scheduleTimezone()
+    {
+        return "Europe/Moscow";
     }
 
     /**

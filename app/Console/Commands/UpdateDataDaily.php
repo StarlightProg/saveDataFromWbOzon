@@ -61,22 +61,28 @@ class UpdateDataDaily extends Command
 
         $suppliersClientData  = array(
             'base_uri' => "https://suppliers-api.wildberries.ru/public/api/",
-            'timeout' => 2.0,
+            'timeout' => 10.0,
             'verify' => false,
             'headers' => $headersSuppliers
         );
 
         ini_set('memory_limit', '-1');
 
-        getIncomes::dispatch($statisticsClientData);
-        getPrices::dispatch($suppliersClientData);
-        getStocks::dispatch($statisticsClientData);
-        getSales::dispatch($statisticsClientData);
-        getOrders::dispatch($statisticsClientData);
-        getStocksOzon::dispatch($ozonClientData);
-        getPostingFboOzon::dispatch($ozonClientData);
-        getPostingFbsOzon::dispatch($ozonClientData);
-        getSalesReports::dispatch($statisticsClientData);
+        try{
+            getIncomes::dispatch($statisticsClientData);
+            getPrices::dispatch($suppliersClientData);
+            getStocks::dispatch($statisticsClientData);
+            getSales::dispatch($statisticsClientData);
+            getOrders::dispatch($statisticsClientData);
+            getStocksOzon::dispatch($ozonClientData);
+            getPostingFboOzon::dispatch($ozonClientData);
+            getPostingFbsOzon::dispatch($ozonClientData);
+            getSalesReports::dispatch($statisticsClientData);
+        } catch(\Throwable $th){
+            if($th->getCode() == 429){
+                echo "Too many requests. Try again later.";
+            }
+        }
 
         ini_set('memory_limit', '128M');
     }
