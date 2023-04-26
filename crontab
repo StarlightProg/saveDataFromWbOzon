@@ -1,1 +1,1 @@
-* * * * * cd /var/www/html && php artisan queue:work --stop-when-empty && php artisan schedule:run >> /dev/stdout 2>&1
+* * * * * cd /var/www/html && php artisan queue:work --stop-when-empty --memory=1024 --timeout=180 && php artisan schedule:run >> /dev/stdout 2>&1
