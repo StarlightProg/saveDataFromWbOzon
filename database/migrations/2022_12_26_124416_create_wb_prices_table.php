@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('wb_prices', function (Blueprint $table) {
             $table->id();
+            $table->date('date')->index();
             $table->unsignedBigInteger('nm_id');
             $table->float('price')->nullable();
             $table->integer('discount')->nullable();

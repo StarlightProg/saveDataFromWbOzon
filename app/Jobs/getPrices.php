@@ -64,6 +64,7 @@ class getPrices implements ShouldQueue
 
         foreach ($data as $price) {  
             $priceDataDB=[
+                'date' => date("Y-m-d"),
                 'nm_id' => $price->nmId,
                 'price' => $price->price,
                 'discount' => $price->discount,

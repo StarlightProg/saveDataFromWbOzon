@@ -84,7 +84,7 @@ class getStocks implements ShouldQueue
 
         foreach ($data as $stock) {
             $stocksDataDB = [
-                'date' => $stock->lastChangeDate, 
+                'date' => date("Y-m-d"), 
                 'last_change_date' => $stock->lastChangeDate, 
                 'supplier_article' => $stock->supplierArticle, 
                 'tech_size' => $stock->techSize, 
