@@ -69,15 +69,15 @@ class UpdateDataDaily extends Command
         ini_set('memory_limit', '-1');
 
         try{
-            getIncomes::dispatch($statisticsClientData);
-            getPrices::dispatch($suppliersClientData);
-            getStocks::dispatch($statisticsClientData);
-            getSales::dispatch($statisticsClientData);
-            getOrders::dispatch($statisticsClientData);
-            getStocksOzon::dispatch($ozonClientData);
+            // getIncomes::dispatch($statisticsClientData);
+            // getPrices::dispatch($suppliersClientData);
+            // getStocks::dispatch($statisticsClientData);
+            // getSales::dispatch($statisticsClientData);
+            // getOrders::dispatch($statisticsClientData);
+            // getStocksOzon::dispatch($ozonClientData);
             getPostingFboOzon::dispatch($ozonClientData);
             getPostingFbsOzon::dispatch($ozonClientData);
-            getSalesReports::dispatch($statisticsClientData);
+            //getSalesReports::dispatch($statisticsClientData);
         } catch(\Throwable $th){
             if($th->getCode() == 429){
                 echo "Too many requests. Try again later.";
