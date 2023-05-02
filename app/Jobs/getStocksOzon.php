@@ -40,9 +40,6 @@ class getStocksOzon implements ShouldQueue
     {
         set_time_limit(0);
 
-        Ozon_stocks::query()->truncate();
-
-
         $Client = new Client([
             'base_uri' => $this->base_uri,
             'timeout' => $this->timeout,

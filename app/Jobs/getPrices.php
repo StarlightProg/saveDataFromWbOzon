@@ -54,8 +54,6 @@ class getPrices implements ShouldQueue
             'promo_code' => null
         ];
 
-        Wb_prices::query()->truncate();
-
         $requestDB = [];
 
         $response = $Client->request('GET','v1/info');
