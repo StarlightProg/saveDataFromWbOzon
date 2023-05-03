@@ -107,80 +107,90 @@ class getSalesReports implements ShouldQueue
 
         $requestDB = [];
         $dataDB = [];
+        $rrd_id = 0;
 
         ini_set('memory_limit', '-1');
 
-        $response = $Client->request('GET','supplier/reportDetailByPeriod', [
-            'query' => [
-                'dateFrom' => '2023-01-01',
-                'dateTo' => date("Y-m-d H:i:s"),
-            ],
-        ]);
+        do {
+            $response = $Client->request('GET','supplier/reportDetailByPeriod', [
+                'query' => [
+                    'dateFrom' => '2023-01-01',
+                    'dateTo' => date("Y-m-d H:i:s"),
+                    'rrdid' => $rrd_id
+                ],
+            ]);
 
-        $data = json_decode($response->getBody()->getContents());
+            $data = json_decode($response->getBody()->getContents());
 
-        $dataDB[] = $data;
+            $rrd_id = !is_null($data) ? $data[count($data)-1]->rrd_id : 0;
 
-        foreach($data as $report){
-            $salesReportsDataDB = [
-                'realizationreport_id' => $report->realizationreport_id, 
-                'date_from' => substr($report->date_from, 0, strpos($report->date_from,"T")), 
-                'date_to' => substr($report->date_to, 0, strpos($report->date_from,"T")), 
-                'create_dt' => substr($report->create_dt, 0, strpos($report->date_from,"Z")), 
-                'suppliercontract_code' => $report->suppliercontract_code, 
-                'rrd_id' => $report->rrd_id, 
-                'gi_id' => $report->gi_id, 
-                'subject_name' => $report->subject_name, 
-                'nm_id' => $report->nm_id, 
-                'brand_name' => $report->brand_name, 
-                'sa_name' => $report->sa_name, 
-                'ts_name' => $report->ts_name, 
-                'barcode' => $report->barcode, 
-                'doc_type_name' => $report->doc_type_name, 
-                'quantity' => $report->quantity, 
-                'retail_price' => $report->retail_price, 
-                'retail_amount' => $report->retail_amount, 
-                'sale_percent' => $report->sale_percent, 
-                'commission_percent' => $report->commission_percent, 
-                'office_name' => $report->office_name, 
-                'supplier_oper_name' => $report->supplier_oper_name, 
-                'order_dt' => substr($report->order_dt, 0, strpos($report->date_from,"T")), 
-                'sale_dt' => substr($report->sale_dt, 0, strpos($report->date_from,"T")), 
-                'rr_dt' => substr($report->rr_dt, 0, strpos($report->date_from,"T")), 
-                'shk_id' => $report->shk_id, 
-                'retail_price_withdisc_rub' => $report->retail_price_withdisc_rub, 
-                'delivery_amount' => $report->delivery_amount, 
-                'return_amount' => $report->return_amount, 
-                'delivery_rub' => $report->delivery_rub, 
-                'gi_box_type_name' => $report->gi_box_type_name, 
-                'product_discount_for_report' => $report->product_discount_for_report, 
-                'supplier_promo' => $report->supplier_promo, 
-                'rid' => $report->rid >= 0 ? $report->rid : 0, 
-                'ppvz_spp_prc' => $report->ppvz_spp_prc, 
-                'ppvz_kvw_prc_base' => $report->ppvz_kvw_prc_base, 
-                'ppvz_kvw_prc' => $report->ppvz_kvw_prc, 
-                'ppvz_sales_commission' => $report->ppvz_sales_commission, 
-                'ppvz_for_pay' => $report->ppvz_for_pay, 
-                'ppvz_reward' => $report->ppvz_reward, 
-                'acquiring_fee' => $report->acquiring_fee, 
-                'acquiring_bank' => $report->acquiring_bank, 
-                'ppvz_vw' => $report->ppvz_vw, 
-                'ppvz_vw_nds' => $report->ppvz_vw_nds, 
-                'ppvz_office_id' => $report->ppvz_office_id, 
-                'ppvz_office_name' => property_exists($report,'ppvz_office_name') ? $report->ppvz_office_name : null, 
-                'ppvz_supplier_id' => $report->ppvz_supplier_id, 
-                'ppvz_supplier_name' => property_exists($report,'ppvz_supplier_name') ? $report->ppvz_supplier_name : null, 
-                'ppvz_inn' => property_exists($report,'ppvz_inn') ? $report->ppvz_inn : null, 
-                'declaration_number' => $report->declaration_number, 
-                'bonus_type_name' => property_exists($report,'bonus_type_name') ? $report->bonus_type_name : null, 
-                'sticker_id' => property_exists($report,'sticker_id') ? $report->sticker_id : null, 
-                'site_country' => property_exists($report,'site_country') ? $report->site_country : null, 
-                'penalty' => property_exists($report,'penalty') ? $report->penalty : null, 
-                'additional_payment' => property_exists($report,'additional_payment') ? $report->additional_payment : null, 
-                'srid' => property_exists($report,'srid') ? $report->srid : null
-            ];
+            if(!is_null($data)){
+                $dataDB[] = $data;
+            } 
+        } while (!empty($data));
 
-            $requestDB[] = $salesReportsDataDB;    
+        foreach($dataDB as $data){
+            foreach($data as $report){
+                $salesReportsDataDB = [
+                    'realizationreport_id' => $report->realizationreport_id, 
+                    'date_from' => substr($report->date_from, 0, strpos($report->date_from,"T")), 
+                    'date_to' => substr($report->date_to, 0, strpos($report->date_from,"T")), 
+                    'create_dt' => substr($report->create_dt, 0, strpos($report->date_from,"Z")), 
+                    'suppliercontract_code' => $report->suppliercontract_code, 
+                    'rrd_id' => $report->rrd_id, 
+                    'gi_id' => $report->gi_id, 
+                    'subject_name' => $report->subject_name, 
+                    'nm_id' => $report->nm_id, 
+                    'brand_name' => $report->brand_name, 
+                    'sa_name' => $report->sa_name, 
+                    'ts_name' => $report->ts_name, 
+                    'barcode' => $report->barcode, 
+                    'doc_type_name' => $report->doc_type_name, 
+                    'quantity' => $report->quantity, 
+                    'retail_price' => $report->retail_price, 
+                    'retail_amount' => $report->retail_amount, 
+                    'sale_percent' => $report->sale_percent, 
+                    'commission_percent' => $report->commission_percent, 
+                    'office_name' => $report->office_name, 
+                    'supplier_oper_name' => $report->supplier_oper_name, 
+                    'order_dt' => substr($report->order_dt, 0, strpos($report->date_from,"T")), 
+                    'sale_dt' => substr($report->sale_dt, 0, strpos($report->date_from,"T")), 
+                    'rr_dt' => substr($report->rr_dt, 0, strpos($report->date_from,"T")), 
+                    'shk_id' => $report->shk_id, 
+                    'retail_price_withdisc_rub' => $report->retail_price_withdisc_rub, 
+                    'delivery_amount' => $report->delivery_amount, 
+                    'return_amount' => $report->return_amount, 
+                    'delivery_rub' => $report->delivery_rub, 
+                    'gi_box_type_name' => $report->gi_box_type_name, 
+                    'product_discount_for_report' => $report->product_discount_for_report, 
+                    'supplier_promo' => $report->supplier_promo, 
+                    'rid' => $report->rid >= 0 ? $report->rid : 0, 
+                    'ppvz_spp_prc' => $report->ppvz_spp_prc, 
+                    'ppvz_kvw_prc_base' => $report->ppvz_kvw_prc_base, 
+                    'ppvz_kvw_prc' => $report->ppvz_kvw_prc, 
+                    'ppvz_sales_commission' => $report->ppvz_sales_commission, 
+                    'ppvz_for_pay' => $report->ppvz_for_pay, 
+                    'ppvz_reward' => $report->ppvz_reward, 
+                    'acquiring_fee' => $report->acquiring_fee, 
+                    'acquiring_bank' => $report->acquiring_bank, 
+                    'ppvz_vw' => $report->ppvz_vw, 
+                    'ppvz_vw_nds' => $report->ppvz_vw_nds, 
+                    'ppvz_office_id' => $report->ppvz_office_id, 
+                    'ppvz_office_name' => property_exists($report,'ppvz_office_name') ? $report->ppvz_office_name : null, 
+                    'ppvz_supplier_id' => $report->ppvz_supplier_id, 
+                    'ppvz_supplier_name' => property_exists($report,'ppvz_supplier_name') ? $report->ppvz_supplier_name : null, 
+                    'ppvz_inn' => property_exists($report,'ppvz_inn') ? $report->ppvz_inn : null, 
+                    'declaration_number' => $report->declaration_number, 
+                    'bonus_type_name' => property_exists($report,'bonus_type_name') ? $report->bonus_type_name : null, 
+                    'sticker_id' => property_exists($report,'sticker_id') ? $report->sticker_id : null, 
+                    'site_country' => property_exists($report,'site_country') ? $report->site_country : null, 
+                    'penalty' => property_exists($report,'penalty') ? $report->penalty : null, 
+                    'additional_payment' => property_exists($report,'additional_payment') ? $report->additional_payment : null, 
+                    'srid' => property_exists($report,'srid') ? $report->srid : null
+                ];
+
+                $requestDB[] = $salesReportsDataDB;    
+            }
         }
 
         $chuncks = array_chunk($requestDB, 200);
